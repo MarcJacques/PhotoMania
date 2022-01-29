@@ -6,7 +6,26 @@
 //
 
 import SwiftUI
-// 
+
+class ViewModel: ObservableObject {
+    @Published var image: Image?
+    
+    func fetchNewImage() {
+        guard let url = URL(string: "https://random.imagecdn.app/500/500") else {
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) {
+            data, _, _ in
+            guard let data = data else { return }
+            
+            DispatchQueue.main.async {
+                guard let uiImage = UIImage(data: data) else  { return }
+                self.image = Image(uiImage: uiImage)
+            }
+        }
+    }
+}
 
 struct ContentView: View {
     var body: some View {
