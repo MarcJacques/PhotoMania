@@ -11,12 +11,10 @@ class ViewModel: ObservableObject {
     @Published var image: Image?
     
     func fetchNewImage() {
-        guard let url = URL(string: "https://random.imagecdn.app/500/500") else {
-            return
-        }
+        guard let url = URL(string: "https://random.imagecdn.app/500/500") else { return }
         
-        let task = URLSession.shared.dataTask(with: url) {
-            data, _, _ in
+        let task = URLSession.shared.dataTask(with: url) { data,
+            _, _ in
             guard let data = data else { return }
             
             DispatchQueue.main.async {
@@ -31,7 +29,7 @@ class ViewModel: ObservableObject {
 }
 
 struct ContentView: View {
-   
+    
     @StateObject  var viewModel = ViewModel()
     
     var body: some View {
@@ -41,17 +39,23 @@ struct ContentView: View {
                 Spacer()
                 
                 if let image = viewModel.image {
+                    ZStack {
                     image
                         .resizable()
                         .foregroundColor(Color.pink)
                         .frame(width: 200, height: 200)
-                        padding()
+                        .padding()
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 1.2,
+                           height: UIScreen.main.bounds.width / 1.2)
+                    .background(Color.green)
+                    .cornerRadius(8)
                 } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .foregroundColor(Color.pink)
-                    .frame(width: 200, height: 200)
-                    padding()
+                    Image(systemName: "photo")
+                        .resizable()
+                        .foregroundColor(Color.pink)
+                        .frame(width: 200, height: 200)
+                        .padding()
                 }
                 
                 Spacer()
